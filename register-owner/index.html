@@ -2,30 +2,210 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seat and Sip Toronto</title>
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@500&family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>Cafe Owner Registration</title>
+  <style>
+    body {
+      font-family: Lexend, sans-serif;
+      margin: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, textarea {
+  width: 300px;
+  padding: 12px 16px;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+}
+    }
+    button {
+      margin-top: 15px;
+      padding: 8px 16px;
+    }
+    #errorMsg {
+      color: red;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    #successMsg {
+      color: green;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: 700px;
+}
+
+.form-grid .full {
+  grid-column: span 2;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  font-size: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  font-family: inherit;
+}
+
+textarea {
+  border-radius: 20px;
+  resize: vertical;
+  min-height: 100px;
+}
+
+input::placeholder, textarea::placeholder, select {
+  color: #888;
+  font-weight: 400;
+}
+
+select {
+  appearance: none;
+  background-color: white;
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+  .error {
+  color: red;
+}
+
+.success {
+  color: green;
+}
+    
+  </style>
 </head>
+  
 <body>
-  <!-- Header -->
+    <!-- Header -->
   <header>
-    <h1>☕ Seat and Sip Toronto</h1>
+    <h1> Cafe Spot Finder</h1>
+       
     <nav>
-      <a href="/register-user/index.html">📝 Register</a>
-      <a href="/login/index.html">🔐 Login</a>
-      <a href="/search/index.html">🔍 Search</a>
-      <a href="/my-reservations/index.html">📅 My Reservations</a>
-      <a href="/my-favorites/index.html">❤️ My Favorites</a>
-      <a href="/register-owner/index.html">🏪 Owner Register</a>
+      <a href="/register-user/index.html"> Register</a>
+      <a href="/login/index.html"> Login</a>
+      <a href="/search/index.html"> Search</a>
+      <a href="/my-reservations/index.html"> My Reservations</a>
+      <a href="/my-favorites/index.html"> My Favorites</a>
+      <a href="/register-owner/index.html"> Owner Register</a>
     </nav>
   </header>
 
-  <!-- Footer -->
+  <h1>Register Your Cafe</h1>
+  <p> Please enter all fields to register your cafe </p>
+
+  <p id="message"></p>
+
+<form id="registrationForm" action="#" method="post" class="registration-form" novalidate>
+
+  <div class="form-group">
+    <input type="text" id="cafeName" name="cafe-name" placeholder=" " required />
+    <label for="cafeName">Cafe Name</label>
+  </div>
+
+  <div class="form-group">
+    <input type="text" id="address" name="address" placeholder=" " required />
+    <label for="address">Address</label>
+  </div>
+
+  <div class="form-group">
+    <input type="text" id="description" name="description" placeholder=" " required />
+    <label for="description">Cafe Description</label>
+  </div>
+  
+  <div class="form-group">
+    <input type="text" id="amenities" name="amenities" placeholder=" " required />
+    <label for="amenities">Amenities</label>
+  </div>
+  
+  <div class="form-group">
+    <input type="tel" id="phone" name="phone" placeholder=" " required />
+    <label for="phone">Phone Number</label>
+  </div>
+
+  <div class="form-group">
+    <input type="url" id="website" name="website" placeholder=" " />
+    <label for="website">Cafe Website</label>
+  </div>
+
+  <div class="form-group">
+    <input type="text" id="hours" name="opening-hours" placeholder=" " required />
+    <label for="hours">Opening Hours</label>
+  </div>
+
+  <div class="form-group">
+    <input type="number" id="seats" name="seats" placeholder=" " required />
+    <label for="seats">Total Seats</label>
+  </div>
+
+  <div class="form-group">
+    <input type="number" id="outlets" name="power-outlets" placeholder=" " required />
+    <label for="outlets">Power Outlets</label>
+  </div>
+
+  <div class="form-group">
+    <select id="noise" name="noise-level" required>
+      <option value="" disabled selected hidden></option>
+      <option value="quiet">Quiet</option>
+      <option value="moderate">Moderate</option>
+      <option value="loud">Loud</option>
+    </select>
+    <label for="noiseLevel">Noise Level</label>
+  </div>
+
+  <div class="form-group">
+    <input type="text" id="ownerName" name="owner-name" placeholder=" " required />
+    <label for="owner">Owner’s Name</label>
+  </div>
+
+  <div class="form-group">
+    <input type="email" id="email" name="email" placeholder=" " required />
+    <label for="email">Email Address</label>
+  </div>
+  
+   <div class="form-group">
+    <input type="password" id="password" name="password" placeholder=" " required />
+    <label for="password">Password</label>
+  </div>
+   
+    <div class="form-group">
+    <input type="password" id="confirmPassword" name="confirmPassword" placeholder=" " required />
+    <label for="confirmPassword">Confirm Password</label>
+  </div>
+  
+  <div class="button-group">
+    <button type="submit">Register</button>
+  </div>
+</form>
+ 
+<br><br>
+  
+<!-- Footer -->
   <footer>
     <p>❤️ Made with love from Toronto</p>
   </footer>
-
-  <script src="js/main.js"></script>
+  
 </body>
 </html>
