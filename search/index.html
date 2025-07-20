@@ -1,31 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seat and Sip Toronto</title>
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@500&family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Café Spot Finder - Find Your Spot</title>
+    
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* This ensures the footer stays at the bottom on short pages */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        /* This is the main content area for the search bar */
+        .search-main {
+            flex-grow: 1; /* Takes up available space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+        /* The search box itself, styled like a .card from your teammate's CSS */
+        .search-box {
+            background-color: #fdfaf5; /* Color from .card */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow from .card */
+            border-radius: 12px; /* Border from .card */
+            padding: 2.5rem;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        .search-box h2 {
+            font-size: 2.2rem; /* A bit smaller than .hero h2 */
+            color: #2c1b1b;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+        .search-box p {
+            font-size: 1.1rem; /* A bit smaller than .hero p */
+            margin-bottom: 2rem;
+            color: #3b2f2f;
+        }
+        /* The input field for location */
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e3d5c4; /* Border from header */
+            border-radius: 8px;
+            font-family: 'Lexend', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            box-sizing: border-box; /* Important for padding and width */
+        }
+        /* The search button, styled like .hero .cta-buttons button */
+        .search-button {
+            font-family: 'Lexend', sans-serif;
+            font-weight: 500;
+            background-color: #a87544; /* Color from .cta-buttons button */
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .search-button:hover {
+            background-color: #895d30; /* Hover color from .cta-buttons button */
+        }
+    </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <h1>☕ Seat and Sip Toronto</h1>
-    <nav>
-      <a href="/register-user/index.html">📝 Register</a>
-      <a href="/login/index.html">🔐 Login</a>
-      <a href="/search/index.html">🔍 Search</a>
-      <a href="/my-reservations/index.html">📅 My Reservations</a>
-      <a href="/my-favorites/index.html">❤️ My Favorites</a>
-      <a href="/register-owner/index.html">🏪 Owner Register</a>
-    </nav>
-  </header>
+    <header>
+        <h1><a href="../index.html">Cafe Spot Finder</a></h1>
+        <nav>
+            <a href="../search/index.html">Search</a>
+            <a href="../my-favorites/index.html">My Favorites</a>
+            <a href="../my-reservations/index.html">Reservations</a>
+            <a href="../login/index.html">Login</a>
+        </nav>
+    </header>
 
-  <!-- Footer -->
-  <footer>
-    <p>❤️ Made with love from Toronto</p>
-  </footer>
+    <main class="search-main">
+        <div class="search-box">
+            <h2>Find Your Perfect Café Spot</h2>
+            <p>Enter a location to discover cafés with availability.</p>
+            <div>
+                <input type="text" id="locationSearchInput" placeholder="e.g., Yonge St, Dundas St" class="search-input">
+                <button id="searchButton" class="search-button">
+                    Search Cafés
+                </button>
+            </div>
+        </div>
+    </main>
 
-  <script src="js/main.js"></script>
+    <footer>
+        <p>© 2025 Seat and Sip Toronto. All rights reserved.</p>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+    </footer>
+
+    <script>
+        const locationInput = document.getElementById('locationSearchInput');
+        const searchBtn = document.getElementById('searchButton');
+        function performSearch() {
+            const location = locationInput.value.trim();
+            if (location) {
+                window.location.href = `results.html?location=${encodeURIComponent(location)}`;
+            } else {
+                alert("Please enter a location to search.");
+            }
+        }
+        searchBtn.addEventListener('click', performSearch);
+        locationInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
 </body>
 </html>
