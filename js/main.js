@@ -69,3 +69,42 @@ localStorage.setItem("cafes", JSON.stringify(cafes));
 setTimeout(() => {
   window.location.href = "fusettes.html";
 }, 1500);
+
+
+// Favorites
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('favorites-container');
+  if (!container) return;
+
+  const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+
+  if (favorites.length === 0) {
+    container.innerHTML = '<p style="font-size: 1.2rem; margin: 2rem auto;">No favorite cafes yet.</p>';
+    return;
+  }
+
+  favorites.forEach(cafe => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    card.innerHTML = `
+      <img src="../../detail/images/${cafe.images[0].src}" alt="${cafe.images[0].alt}" />
+      <div class="card-content">
+        <h4>${cafe.name}</h4>
+        <p><strong>Location:</strong> ${cafe.address}</p>
+        <p><strong>Rating:</strong> ${cafe.rating || 'N/A'}</p>
+        <p><strong>Tags:</strong> ${cafe.amenities}</p>
+        <button class="remove-btn" onclick="removeFromFavorites('${cafe.id}')">Remove</button>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+});
+
+function removeFromFavorites(cafeId) {
+  let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+  favorites = favorites.filter(f => f.id !== cafeId);
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+  window.location.reload();
+}

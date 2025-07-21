@@ -467,3 +467,25 @@ button[type="submit"]:hover {
 #message:empty {
   display: none;
 }
+
+/*Favorite Part*/
+  .remove-btn {
+  margin-top: 12px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: 'Lexend', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.remove-btn:hover {
+  background-color: #c82333;
+}
+
+nav a.active {
+  background-color: #a87544;
+  color: white;
+}

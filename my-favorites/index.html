@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seat and Sip Toronto</title>
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@500&family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Loading... - Cafe Spot Finder</title>
+    <link rel="stylesheet" href="../../css/styles.css">
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <h1>☕ Seat and Sip Toronto</h1>
-    <nav>
-      <a href="/register-user/index.html">📝 Register</a>
-      <a href="/login/index.html">🔐 Login</a>
-      <a href="/search/index.html">🔍 Search</a>
-      <a href="/my-reservations/index.html">📅 My Reservations</a>
-      <a href="/my-favorites/index.html">❤️ My Favorites</a>
-      <a href="/register-owner/index.html">🏪 Owner Register</a>
-    </nav>
-  </header>
+    <header>
+        <h1><a href="../../index.html">Cafe Spot Finder</a></h1>
+        <nav>
+            <a href="../../search/index.html">Search</a>
+            <a href="../../my-favorites/index.html">My Favorites</a>
+            <a href="../../my-reservations/index.html">Reservations</a>
+            <a href="../../login/index.html">Login</a>
+        </nav>
+    </header>
 
-  <!-- Footer -->
-  <footer>
-    <p>❤️ Made with love from Toronto</p>
+    <main class="card-section">
+    <div class="card" data-cafe-id="1">
+      <img src="../images/cafe1.jpg" alt="Cafe Latte Love">
+      <div class="card-content">
+        <h4>Cafe Latte Love</h4>
+        <p>Downtown Toronto</p>
+        <p>⭐ 4.6 | Cozy • Organic</p>
+        <button class="fav-toggle" aria-label="Remove from favourites">❤️</button>
+      </div>
+    </div>
+    <!-- More favourite café cards dynamically added via JS -->
+  </main>
+    <footer>
+    <p>Made with ☕️ and 🧡 from Toronto</p>
   </footer>
-
-  <script src="js/main.js"></script>
 </body>
 </html>
