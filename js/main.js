@@ -69,3 +69,76 @@ localStorage.setItem("cafes", JSON.stringify(cafes));
 setTimeout(() => {
   window.location.href = "fusettes.html";
 }, 1500);
+
+
+// Favorites
+document.addEventListener('DOMContentLoaded', () => {
+  const favButtons = document.querySelectorAll('.fav-toggle');
+
+  favButtons.forEach(btn => {
+    const cafeId = btn.dataset.cafeId;
+    if (isFavourited(cafeId)) {
+      btn.textContent = '❤️';
+      btn.setAttribute('aria-label', 'Remove from favourites');
+    }
+
+    btn.addEventListener('click', () => {
+      if (!isLoggedIn()) {
+        window.location.href = '../login.html';
+        return;
+      }
+
+      if (isFavourited(cafeId)) {
+        removeFavourite(cafeId);
+        btn.textContent = '🤍';
+        btn.setAttribute('aria-label', 'Add to favourites');
+        showToast('Removed from favourites');
+      } else {
+        saveFavourite(cafeId);
+        btn.textContent = '❤️';
+        btn.setAttribute('aria-label', 'Remove from favourites');
+        showToast('Added to favourites');
+      }
+    });
+  });
+
+  function isLoggedIn() {
+    // Replace with actual auth check
+    return localStorage.getItem('userLoggedIn') === 'true';
+  }
+
+  function isFavourited(id) {
+    const favs = JSON.parse(localStorage.getItem('favourites') || '[]');
+    return favs.includes(id);
+  }
+
+  function saveFavourite(id) {
+    const favs = JSON.parse(localStorage.getItem('favourites') || '[]');
+    if (!favs.includes(id)) {
+      favs.push(id);
+      localStorage.setItem('favourites', JSON.stringify(favs));
+    }
+  }
+
+  function removeFavourite(id) {
+    let favs = JSON.parse(localStorage.getItem('favourites') || '[]');
+    favs = favs.filter(fid => fid !== id);
+    localStorage.setItem('favourites', JSON.stringify(favs));
+  }
+
+  function showToast(msg) {
+    const toast = document.createElement('div');
+    toast.textContent = msg;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.background = '#cd7f32';
+    toast.style.color = '#fff';
+    toast.style.padding = '10px 20px';
+    toast.style.borderRadius = '10px';
+    toast.style.zIndex = '999';
+    toast.style.fontWeight = '600';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+  }
+});
