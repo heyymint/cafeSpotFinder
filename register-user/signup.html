@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+   <header>
+  <h1><a href="../../index.html">Cafe Spot Finder</a></h1>
+  <nav>
+    <a href="../../search/index.html">Search</a>
+    <a href="../../my-favorites/index.html">My Favorites</a>
+    <a href="../../my-reservations/index.html">Reservations</a>
+    <a href="../../login/index.html">Login</a>
+  </nav>
+</header>
+  <style>
+    /* Shared Navigation Styles */
+header {
+    background-color: #f5eadd;
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: none !important;
+}
+
+header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+}
+
+header h1 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    gap: 19px;
+}
+
+nav a {
+    font-family: 'Lexend', sans-serif;
+    font-weight: 500;
+    background-color: #d8bfa4;
+    padding: 8px 16px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+    display: inline-block;
+    text-decoration: none;
+    color: inherit;
+}
+
+nav a:hover {
+    background-color: #c6a98c;
+    cursor: pointer;
+}
+
+nav a.active {
+    background-color: #a87544;
+    color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+    }
+    
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+    }
+    
+    nav a {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+    
+    header h1 {
+        font-size: 24px;
+    }
+}
+    body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Lexend', sans-serif;
+  background-color: #fdf6f0;
+  color: #3b2f2f;
+}
+
+    h2 {
+      font-weight: 700;
+      color: #2c1b1b;
+      margin-bottom: 20px;
+      font-size: 32px;
+      text-align: center;
+    }
+
+    form {
+      background-color: #fff8f2;
+      width: 320px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 1px solid #e3d5c4;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    #email,
+    #password {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #e3d5c4;
+      border-radius: 8px;
+      font-family: 'Lexend', sans-serif;
+      font-size: 16px;
+      color: #3b2f2f;
+      box-sizing: border-box;
+    }
+
+    label {
+      font-weight: 400;
+      font-size: 14px;
+      display: block;
+      margin-bottom: 15px;
+      color: #3b2f2f;
+    }
+
+    input[type=checkbox] {
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-family: 'Lexend', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      background-color: #a87544;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:disabled {
+      background-color: #d8bfa4;
+      cursor: not-allowed;
+    }
+
+    button:hover:enabled {
+      background-color: #895d30;
+    }
+
+    .message {
+      text-align: center;
+      color: #3b2f2f;
+      font-weight: 500;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Create Your Account</h2>
+
+  <form id="signupForm">
+    <input type="text" id="email" placeholder="Email">
+    <input type="text" id="password" placeholder="Password">
+
+    <label>
+      <input type="checkbox" id="terms"> I agree to the Terms and Conditions
+    </label>
+
+    <button type="submit" id="submitBtn" disabled>Sign Up</button>
+
+    <div id="confirmationMessage" class="message hidden">
+      ✅ Registration successful! Redirecting to login page...
+    </div>
+  </form>
+
+  <script>
+    var emailInput = document.querySelector("#email");
+    var passwordInput = document.querySelector("#password");
+    var termsCheckbox = document.querySelector("#terms");
+    var submitButton = document.querySelector("#submitBtn");
+    var form = document.querySelector("#signupForm");
+    var message = document.querySelector("#confirmationMessage");
+
+    function checkFields() {
+      var emailFilled = emailInput.value.length > 0;
+      var passwordFilled = passwordInput.value.length > 0;
+      var termsChecked = termsCheckbox.checked;
+
+      if (emailFilled == true) {
+        if (passwordFilled == true) {
+          if (termsChecked == true) {
+            submitButton.disabled = false;
+          } else {
+            submitButton.disabled = true;
+          }
+        } else {
+          submitButton.disabled = true;
+        }
+      } else {
+        submitButton.disabled = true;
+      }
+    }
+
+    emailInput.oninput = checkFields;
+    passwordInput.oninput = checkFields;
+    termsCheckbox.onchange = checkFields;
+
+    form.onsubmit = function () {
+      message.classList.remove("hidden");
+      setTimeout(function () {
+        window.location.href = "login.html";
+      }, 2000);
+      return false;
+    }
+    // Shared Navigation Component
+function createNavigation(currentPage = '') {
+    const basePath = getBasePath();
+    
+    return `
+        <header>
+            <h1><a href="${basePath}index.html">Cafe Spot Finder</a></h1>
+            <nav>
+                <a href="${basePath}search/index.html" ${currentPage === 'search' ? 'class="active"' : ''}>Search</a>
+                <a href="${basePath}my-favorites/index.html" ${currentPage === 'favorites' ? 'class="active"' : ''}>My Favorites</a>
+                <a href="${basePath}my-reservations/index.html" ${currentPage === 'reservations' ? 'class="active"' : ''}>Reservations</a>
+                <a href="${basePath}login/index.html" ${currentPage === 'login' ? 'class="active"' : ''}>Login</a>
+            </nav>
+        </header>
+    `;
+}
+
+// Determine the base path based on current location
+function getBasePath() {
+    const path = window.location.pathname;
+    const depth = (path.match(/\//g) || []).length - 1;
+    
+    if (path.includes('/cafes/')) {
+        return '../../';
+    } else if (depth > 1) {
+        return '../';
+    } else {
+        return '';
+    }
+}
+
+// Load navigation into the page
+function loadNavigation(currentPage = '') {
+    document.addEventListener('DOMContentLoaded', function() {
+        const navigationHTML = createNavigation(currentPage);
+        
+        // Find existing header or create one
+        let header = document.querySelector('header');
+        if (header) {
+            header.outerHTML = navigationHTML;
+        } else {
+            // Insert at the beginning of body
+            document.body.insertAdjacentHTML('afterbegin', navigationHTML);
+        }
+    });
+}
+
+// Usage examples:
+// For main page: loadNavigation();
+// For search page: loadNavigation('search');
+// For favorites page: loadNavigation('favorites');
+// For reservations page: loadNavigation('reservations');
+// For login page: loadNavigation('login');
+// For cafe pages: loadNavigation();
+  </script>
+</body>
+</html>
