@@ -1,32 +1,202 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seat and Sip Toronto</title>
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@500&family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>Cafe Spot Finder</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Lexend', sans-serif;
+      background-color: #fdf6f0;
+      color: #3b2f2f;
+    }
+
+    header {
+      background-color: #f5eadd;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    nav {
+      display: flex;
+      gap: 19px;
+    }
+
+    nav a {
+      font-weight: 500;
+      background-color: #d8bfa4;
+      padding: 8px 16px;
+      border-radius: 10px;
+      transition: background-color 0.3s ease;
+      font-size: 16px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    nav a:hover {
+      background-color: #c6a98c;
+      cursor: pointer;
+    }
+
+    nav a.active {
+      background-color: #a87544;
+      color: white;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-top: 0.3rem;
+      font-family: 'Lexend', sans-serif;
+    }
+
+    button {
+      margin-top: 1.5rem;
+      padding: 0.8rem 1.2rem;
+      font-weight: 600;
+      background-color: #a87544;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #895d30;
+    }
+
+    .confirmation {
+      background-color: #fff3e5;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      border-radius: 8px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <!-- Header -->
   <header>
-    <h1>☕ Seat and Sip Toronto</h1>
+    <h1>Cafe Spot Finder</h1>
     <nav>
-      <a href="/register-user/index.html">📝 Register</a>
-      <a href="/login/index.html">🔐 Login</a>
-      <a href="/search/index.html">🔍 Search</a>
-      <a href="/my-reservations/index.html">📅 My Reservations</a>
-      <a href="/my-favorites/index.html">❤️ My Favorites</a>
-      <a href="/register-owner/index.html">🏪 Owner Register</a>
+      <a href="#">Search</a>
+      <a href="#">My Favorites</a>
+      <a href="#" class="active">Reservations</a>
+      <a href="#">Login</a>
     </nav>
   </header>
 
-  <!-- Footer -->
-  <footer>
-    <p>❤️ Made with love from Toronto</p>
-  </footer>
+  <div class="container">
+    <form id="reservationForm">
+      <label for="date">Select Date:</label>
+      <select id="date" name="date" required></select>
 
-  <script src="js/main.js"></script>
+      <label for="time">Select Time:</label>
+      <select id="time" name="time" required></select>
+
+      <label for="people">Number of People:</label>
+      <select id="people" name="people" required>
+        <option value="">Select</option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+      </select>
+
+      <button type="submit">Confirm Reservation</button>
+    </form>
+
+    <div class="confirmation" id="confirmationBox"></div>
+  </div>
+
+  <script>
+    var dateSelect = document.querySelector('#date');
+    var today = new Date();
+    for (var i = 0; i < 7; i++) {
+      var futureDate = new Date(today);
+      futureDate.setDate(today.getDate() + i);
+      var yyyy = futureDate.getFullYear();
+      var mm = (futureDate.getMonth() + 1).toString().padStart(2, '0');
+      var dd = futureDate.getDate().toString().padStart(2, '0');
+      var formattedDate = `${yyyy}-${mm}-${dd}`;
+      var readableText = futureDate.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        weekday: 'short'
+      });
+      var option = document.createElement('option');
+      option.value = formattedDate;
+      option.textContent = readableText;
+      dateSelect.appendChild(option);
+    }
+    var timeSelect = document.querySelector('#time');
+    for (var hour = 8; hour <= 20; hour++) {
+      for (var min = 0; min < 60; min += 5) {
+        var hh = hour.toString().padStart(2, '0');
+        var mm = min.toString().padStart(2, '0');
+        var option = document.createElement('option');
+        option.value = `${hh}:${mm}`;
+        option.textContent = `${hh}:${mm}`;
+        timeSelect.appendChild(option);
+      }
+    }
+    var form = document.querySelector('#reservationForm');
+    var confirmation = document.querySelector('#confirmationBox');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      var date = document.querySelector('#date').value;
+      var time = document.querySelector('#time').value;
+      var people = document.querySelector('#people').value;
+
+      if (date && time && people) {
+        var id = 'RSV' + Math.floor(Math.random() * 1000000);
+        confirmation.innerHTML = `
+          <h3>Reservation Confirmed!</h3>
+          <p><strong>Date:</strong> ${date}</p>
+          <p><strong>Time:</strong> ${time}</p>
+          <p><strong>Number of People:</strong> ${people}</p>
+          <p><strong>Reservation ID:</strong> ${id}</p>
+          <button id="cancelBtn">Cancel Reservation</button>
+        `;
+        confirmation.style.display = 'block';
+        form.style.display = 'none';
+
+        document.querySelector('#cancelBtn').addEventListener('click', function () {
+          confirmation.style.display = 'none';
+          form.style.display = 'block';
+        });
+      } else {
+        alert('Please complete all fields.');
+      }
+    });
+  </script>
 </body>
 </html>
