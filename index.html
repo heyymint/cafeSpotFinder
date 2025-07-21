@@ -3,39 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seat and Sip Toronto</title>
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@500&family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>Cafe Spot Finder</title>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <!-- Header -->
   <header>
-    <h1>☕ Seat and Sip Toronto</h1>
+    <h1><a href="index.html">Cafe Spot Finder</a></h1>
     <nav>
-      <a href="/register-user/index.html">📝 Register</a>
-      <a href="/login/index.html">🔐 Login</a>
-      <a href="/search/index.html">🔍 Search</a>
-      <a href="/my-reservations/index.html">📅 My Reservations</a>
-      <a href="/my-favorites/index.html">❤️ My Favorites</a>
-      <a href="/register-owner/index.html">🏪 Owner Register</a>
+      <a href="search/index.html">Search</a>
+      <a href="my-favorites/index.html">My Favorites</a>
+      <a href="my-reservations/index.html">Reservations</a>
+      <a href="login/index.html">Login</a>
     </nav>
   </header>
 
   <!-- Hero Section -->
-  <section class="hero">
-    <h2>Savor the Perfect Brew!</h2>
-    <p>Find the coziest cafes around Toronto to sip, study, and share moments. Whether you're a student, remote worker, or cafe lover—we've got your seat!</p>
+  <section class="hero" style="background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url('assets/landing-bg.jpg'); background-size: cover; background-position: center;">
+    <h2>Find Your Perfect Cafe</h2>
+    <p>Discover cozy cafes in Toronto with real-time availability, perfect for work, study, or relaxation.</p>
     <div class="cta-buttons">
-      <button onclick="window.location.href='/search-result/index.html'">Start Searching</button>
-      <button onclick="window.location.href='/register-user/index.html'">Create Account</button>
+      <button onclick="window.location.href='search/index.html'">Start Searching</button>
+      <button onclick="window.location.href='register-owner/index.html'">Register Your Cafe</button>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="feature-item">
+      <h3>Real-Time Availability</h3>
+      <p>Check seat availability, power outlets, and noise levels in real-time.</p>
+    </div>
+    <div class="feature-item">
+      <h3>Save Favorites</h3>
+      <p>Keep track of your favorite cafes and never lose that perfect spot.</p>
+    </div>
+    <div class="feature-item">
+      <h3>Easy Reservations</h3>
+      <p>Reserve your table in advance and guarantee your perfect workspace.</p>
     </div>
   </section>
 
   <!-- Footer -->
   <footer>
-    <p>❤️ Made with love from Toronto</p>
+    <p>&copy; 2024 Cafe Spot Finder. All rights reserved.</p>
+    <div>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Contact Us</a>
+    </div>
   </footer>
-
-  <script src="js/main.js"></script>
 </body>
 </html>
