@@ -73,72 +73,38 @@ setTimeout(() => {
 
 // Favorites
 document.addEventListener('DOMContentLoaded', () => {
-  const favButtons = document.querySelectorAll('.fav-toggle');
+  const container = document.getElementById('favorites-container');
+  if (!container) return;
 
-  favButtons.forEach(btn => {
-    const cafeId = btn.dataset.cafeId;
-    if (isFavourited(cafeId)) {
-      btn.textContent = '❤️';
-      btn.setAttribute('aria-label', 'Remove from favourites');
-    }
+  const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 
-    btn.addEventListener('click', () => {
-      if (!isLoggedIn()) {
-        window.location.href = '../login.html';
-        return;
-      }
+  if (favorites.length === 0) {
+    container.innerHTML = '<p style="font-size: 1.2rem; margin: 2rem auto;">No favorite cafes yet.</p>';
+    return;
+  }
 
-      if (isFavourited(cafeId)) {
-        removeFavourite(cafeId);
-        btn.textContent = '🤍';
-        btn.setAttribute('aria-label', 'Add to favourites');
-        showToast('Removed from favourites');
-      } else {
-        saveFavourite(cafeId);
-        btn.textContent = '❤️';
-        btn.setAttribute('aria-label', 'Remove from favourites');
-        showToast('Added to favourites');
-      }
-    });
+  favorites.forEach(cafe => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    card.innerHTML = `
+      <img src="../../detail/images/${cafe.images[0].src}" alt="${cafe.images[0].alt}" />
+      <div class="card-content">
+        <h4>${cafe.name}</h4>
+        <p><strong>Location:</strong> ${cafe.address}</p>
+        <p><strong>Rating:</strong> ${cafe.rating || 'N/A'}</p>
+        <p><strong>Tags:</strong> ${cafe.amenities}</p>
+        <button class="remove-btn" onclick="removeFromFavorites('${cafe.id}')">Remove</button>
+      </div>
+    `;
+
+    container.appendChild(card);
   });
-
-  function isLoggedIn() {
-    // Replace with actual auth check
-    return localStorage.getItem('userLoggedIn') === 'true';
-  }
-
-  function isFavourited(id) {
-    const favs = JSON.parse(localStorage.getItem('favourites') || '[]');
-    return favs.includes(id);
-  }
-
-  function saveFavourite(id) {
-    const favs = JSON.parse(localStorage.getItem('favourites') || '[]');
-    if (!favs.includes(id)) {
-      favs.push(id);
-      localStorage.setItem('favourites', JSON.stringify(favs));
-    }
-  }
-
-  function removeFavourite(id) {
-    let favs = JSON.parse(localStorage.getItem('favourites') || '[]');
-    favs = favs.filter(fid => fid !== id);
-    localStorage.setItem('favourites', JSON.stringify(favs));
-  }
-
-  function showToast(msg) {
-    const toast = document.createElement('div');
-    toast.textContent = msg;
-    toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
-    toast.style.right = '20px';
-    toast.style.background = '#cd7f32';
-    toast.style.color = '#fff';
-    toast.style.padding = '10px 20px';
-    toast.style.borderRadius = '10px';
-    toast.style.zIndex = '999';
-    toast.style.fontWeight = '600';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
-  }
 });
+
+function removeFromFavorites(cafeId) {
+  let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+  favorites = favorites.filter(f => f.id !== cafeId);
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+  window.location.reload();
+}
