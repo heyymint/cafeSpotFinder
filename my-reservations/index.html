@@ -10,6 +10,9 @@
       font-family: 'Lexend', sans-serif;
       background-color: #fdf6f0;
       color: #3b2f2f;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
@@ -23,7 +26,6 @@
     header h1 {
       font-size: 32px;
       font-weight: 700;
-      margin: 0;
     }
 
     nav {
@@ -97,6 +99,27 @@
       margin-top: 1.5rem;
       border-radius: 8px;
       display: none;
+    }
+
+    footer {
+      background-color: #3b2f2f;
+      color: #fdf6f0;
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 400;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: #fdf6f0;
+      margin: 0 0.5rem;
+      font-weight: 400;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -198,5 +221,14 @@
       }
     });
   </script>
+
+  <footer>
+    <p>&copy; 2024 Cafe Spot Finder. All rights reserved.</p>
+    <div>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </footer>
 </body>
 </html>
