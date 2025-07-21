@@ -231,22 +231,35 @@
 
         function toggleFavorite() {
             if (!currentCafe) return;
-            
-            const btn = document.querySelector('.favorite-btn');
-            const heart = btn.querySelector('.heart');
-            
-            if (heart.textContent === '♡') {
-                heart.textContent = '♥';
-                heart.style.color = '#a87544';
-                btn.innerHTML = '<span class="heart" style="color: #a87544;">♥</span> Added to Favorites';
-                alert(`${currentCafe.name} added to your favorites!`);
-            } else {
-                heart.textContent = '♡';
-                heart.style.color = '#a87544';
-                btn.innerHTML = '<span class="heart" style="color: #a87544;">♡</span> Add to Favorites';
-                alert(`${currentCafe.name} removed from favorites.`);
-            }
-        }
+
+            const isLoggedIn = true; // 🔁 Replace with real login check if needed
+
+            if (!isLoggedIn) {
+        window.location.href = '../../login/index.html';
+        return;
+    }
+
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    const index = favorites.findIndex(f => f.id === currentCafe.id);
+
+    const btn = document.querySelector('.favorite-btn');
+    const heart = btn.querySelector('.heart');
+
+    if (index === -1) {
+        favorites.push(currentCafe);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        heart.textContent = '♥';
+        btn.innerHTML = `<span class="heart" style="color: #a87544;">♥</span> Added to Favorites`;
+        alert(`${currentCafe.name} added to your favorites!`);
+    } else {
+        favorites.splice(index, 1);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        heart.textContent = '♡';
+        btn.innerHTML = `<span class="heart" style="color: #a87544;">♡</span> Add to Favorites`;
+        alert(`${currentCafe.name} removed from favorites.`);
+    }
+}
+
 
         function changeImage(direction) {
             if (images.length === 0) return;
