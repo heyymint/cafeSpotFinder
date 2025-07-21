@@ -414,7 +414,7 @@ footer a:hover {
 .form-group input:focus + label,
 .form-group input:not(:placeholder-shown) + label,
 .form-group select:focus + label,
-.form-group select:not([value=""]) + label {
+.form-group select:valid + label {
   top: -8px;
   left: 10px;
   font-size: 12px;

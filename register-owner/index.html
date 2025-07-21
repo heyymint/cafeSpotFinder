@@ -3,10 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <title>Cafe Owner Registration</title>
+  <link rel="stylesheet" href="../css/styles.css">
   <style>
-    body {
-      font-family: Lexend, sans-serif;
-      margin: 20px;
+    header {
+      border-bottom: none !important;
+    }
+    
+    main {
+      padding: 20px;
     }
     label {
       display: block;
@@ -30,7 +34,6 @@ input:focus, select:focus, textarea:focus {
   border-color: #6c63ff;
   box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
 }
-    }
     button {
       margin-top: 15px;
       padding: 8px 16px;
@@ -80,6 +83,11 @@ input::placeholder, textarea::placeholder, select {
 select {
   appearance: none;
   background-color: white;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  cursor: pointer;
 }
 
 @media (max-width: 600px) {
@@ -101,24 +109,22 @@ select {
 <body>
     <!-- Header -->
   <header>
-    <h1> Cafe Spot Finder</h1>
-       
+    <h1><a href="../index.html">Cafe Spot Finder</a></h1>
     <nav>
-      <a href="/register-user/index.html"> Register</a>
-      <a href="/login/index.html"> Login</a>
-      <a href="/search/index.html"> Search</a>
-      <a href="/my-reservations/index.html"> My Reservations</a>
-      <a href="/my-favorites/index.html"> My Favorites</a>
-      <a href="/register-owner/index.html"> Owner Register</a>
+      <a href="../search/index.html">Search</a>
+      <a href="../my-favorites/index.html">My Favorites</a>
+      <a href="../my-reservations/index.html">Reservations</a>
+      <a href="../login/index.html">Login</a>
     </nav>
   </header>
 
-  <h1>Register Your Cafe</h1>
-  <p> Please enter all fields to register your cafe </p>
+  <main>
+    <h1>Register Your Cafe</h1>
+    <p> Please enter all fields to register your cafe </p>
 
-  <p id="message"></p>
+    <p id="message"></p>
 
-<form id="registrationForm" action="#" method="post" class="registration-form" novalidate>
+    <form id="registrationForm" action="#" method="post" class="registration-form" novalidate>
 
   <div class="form-group">
     <input type="text" id="cafeName" name="cafe-name" placeholder=" " required />
@@ -166,13 +172,13 @@ select {
   </div>
 
   <div class="form-group">
-    <select id="noise" name="noise-level" required>
+    <select id="noise" name="noise-level" value="" placeholder=" " required>
       <option value="" disabled selected hidden></option>
       <option value="quiet">Quiet</option>
       <option value="moderate">Moderate</option>
       <option value="loud">Loud</option>
     </select>
-    <label for="noiseLevel">Noise Level</label>
+    <label for="noise">Noise Level</label>
   </div>
 
   <div class="form-group">
@@ -195,14 +201,13 @@ select {
     <label for="confirmPassword">Confirm Password</label>
   </div>
   
-  <div class="button-group">
-    <button type="submit">Register</button>
-  </div>
-</form>
- 
-<br><br>
+      <div class="button-group">
+        <button type="submit">Register</button>
+      </div>
+    </form>
+  </main>
   
-<!-- Footer -->
+  <!-- Footer -->
   <footer>
     <p>❤️ Made with love from Toronto</p>
   </footer>
