@@ -293,10 +293,6 @@
             document.getElementById('imageModal').style.display = 'none';
         }
 
-        function makeReservation() {
-            if (!currentCafe) return;
-            alert(`Reservation system coming soon! Please call ${currentCafe.name} directly at ${currentCafe.phone} to make a reservation.`);
-        }
 
         // Load cafe data when page loads
         document.addEventListener('DOMContentLoaded', loadCafeData);

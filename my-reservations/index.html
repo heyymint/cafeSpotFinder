@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Cafe Spot Finder</title>
+  <link rel="stylesheet" href="../css/styles.css">
   <style>
     body {
       margin: 0;
@@ -21,11 +22,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: none;
     }
 
     header h1 {
       font-size: 32px;
       font-weight: 700;
+    }
+
+    header h1 a {
+      color: inherit;
+      text-decoration: none;
     }
 
     nav {
@@ -34,6 +41,7 @@
     }
 
     nav a {
+      font-family: 'Lexend', sans-serif;
       font-weight: 500;
       background-color: #d8bfa4;
       padding: 8px 16px;
@@ -42,6 +50,7 @@
       font-size: 16px;
       text-decoration: none;
       color: inherit;
+      display: inline-block;
     }
 
     nav a:hover {
@@ -125,12 +134,12 @@
 </head>
 <body>
   <header>
-    <h1>Cafe Spot Finder</h1>
+    <h1><a href="../index.html">Cafe Spot Finder</a></h1>
     <nav>
-      <a href="#">Search</a>
-      <a href="#">My Favorites</a>
-      <a href="#" class="active">Reservations</a>
-      <a href="#">Login</a>
+      <a href="../search/index.html">Search</a>
+      <a href="../my-favorites/index.html">My Favorites</a>
+      <a href="../my-reservations/index.html" class="active">Reservations</a>
+      <a href="../login/index.html">Login</a>
     </nav>
   </header>
 
