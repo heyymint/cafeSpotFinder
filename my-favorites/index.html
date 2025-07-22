@@ -1,36 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Café Spot Finder - Find Your Spot</title>
-    
-    <link rel="stylesheet" href="../css/styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Favourites - Cafe Spot Finder</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .empty-state{padding:2rem;text-align:center;color:#666;font-style:italic;}
+    .card-section{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;padding:2rem;}
+    .card{background:#fff;border:1px solid #e0d7ce;border-radius:8px;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;}
+    .card img{width:100%;height:160px;object-fit:cover;}
+    .card-content{padding:1rem;display:flex;flex-direction:column;gap:.25rem;}
+    .card-content h4{margin:0;color:#2c1b1b;}
+    .card-content p{margin:0;font-size:.9rem;color:#5c4c4c;}
+    .card-content .fav-toggle{margin-top:.5rem;align-self:flex-start;background:none;border:none;cursor:pointer;font-size:1.25rem;line-height:1;}
+    .card-content .detail-link{margin-top:.5rem;align-self:flex-start;font-size:.85rem;color:#a87544;text-decoration:underline;}
+  </style>
 </head>
 <body>
-    <header>
+  <header>
+    <h1><a href="../index.html">Cafe Spot Finder</a></h1>
+    <nav>
+      <a href="../search/index.html">Search</a>
+      <a href="../my-favorites/index.html">My Favorites</a>
+      <a href="../login/index.html">Login</a>
+    </nav>
+  </header>
 
-        <h1><a href="../index.html">Cafe Spot Finder</a></h1>
-        <nav>
-            <a href="../search/index.html">Search</a>
-            <a href="../my-favorites/index.html">My Favorites</a>
-            <a href="../login/index.html">Login</a>
-        </nav>
-    </header>
-
-    <main class="card-section">
-    <div class="card" data-cafe-id="1">
-      <img src="../images/cafe1.jpg" alt="Cafe Latte Love">
-      <div class="card-content">
-        <h4>Cafe Latte Love</h4>
-        <p>Downtown Toronto</p>
-        <p>⭐ 4.6 | Cozy • Organic</p>
-        <button class="fav-toggle" aria-label="Remove from favourites">❤️</button>
-      </div>
-    </div>
-    <!-- More favourite café cards dynamically added via JS -->
+  <main>
+    <h2 style="text-align:center;margin-top:2rem;">My Favourites</h2>
+    <p id="no-favorites" class="empty-state" hidden>You haven't added any favourites yet. Browse cafés and tap the heart to save them here.</p>
+    <section id="favorites-list" class="card-section"></section>
   </main>
-  <!-- Footer -->
+
   <footer>
     <p>&copy; 2024 Cafe Spot Finder. All rights reserved.</p>
     <div>
@@ -39,5 +41,12 @@
       <a href="#">Contact Us</a>
     </div>
   </footer>
+
+  <!-- Toast container injected by JS when needed -->
+
+  <script src="../js/main.js" defer></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', CSF.renderFavoritesPage);
+  </script>
 </body>
 </html>
