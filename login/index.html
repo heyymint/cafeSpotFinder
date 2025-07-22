@@ -254,8 +254,21 @@ nav a.active {
       error.style.display = 'none'
     }
 
-    form.onsubmit = function () {
-      if (email.value == '123') {
+    form.onsubmit = function () { alert(' login ');
+      const savedUser = JSON.parse(localStorage.getItem("user")); alert('savedUser.email ' +savedUser.email +  'email.value ' +  email.value())
+      if (savedUser && savedUser.email === email.value() && savedUser.password === password.value()) {
+        //showToast("✅ Login successful!");
+        setTimeout(() => {
+          window.location.href = "landpage.html?user=" + email;
+        }, 1500);
+        return false
+      } else {
+        //showToast("❌ Invalid email or password", true);
+        error.style.display = 'block'
+        return false
+      }
+
+      /*if (email.value == '123') {
         if (password.value == '123') {
           window.location.href = '../landpage.html';
           return false
@@ -266,7 +279,7 @@ nav a.active {
       } else {
         error.style.display = 'block'
         return false
-      }
+      }*/
     }
     // Shared Navigation Component
 function createNavigation(currentPage = '') {
