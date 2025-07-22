@@ -232,10 +232,11 @@
         function toggleFavorite() {
             if (!currentCafe) return;
 
-            const isLoggedIn = true; // 🔁 Replace with real login check if needed
+            const isLoggedIn = false; // 🔁 Replace with real login check if needed
 
             if (!isLoggedIn) {
-            window.location.href = '../../login/index.html';
+                alert('Please log in to continue.');
+                window.location.href = '../../login/index.html';
                 return;
             }
             
