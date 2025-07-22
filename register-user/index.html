@@ -226,6 +226,11 @@ nav a.active {
     termsCheckbox.onchange = checkFields;
 
     form.onsubmit = function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const user = { email, password };
+      localStorage.setItem("user", JSON.stringify(user));
+      
       message.classList.remove("hidden");
       setTimeout(function () {
         window.location.href = "../login/index.html";
