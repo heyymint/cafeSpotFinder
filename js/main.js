@@ -1,547 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Loading... - Cafe Spot Finder</title>
-    <link rel="stylesheet" href="../../css/styles.css">
-</head>
-<body>
-    <header>
-        <h1><a href="../../index.html">Cafe Spot Finder</a></h1>
-        <nav>
-            <a href="../../search/index.html">Search</a>
-            <a href="../../my-favorites/index.html">My Favorites</a>
-            <a href="../../login/index.html">Login</a>
-        </nav>
-    </header>
+const form = document.getElementById("registrationForm");
+const message = document.getElementById("message");
 
-    <main>
-        <section class="cafe-header">
-            <h1 id="cafe-name">Loading...</h1>
-            <button class="favorite-btn" onclick="toggleFavorite()">
-                <span class="heart">♡</span> Add to Favorites
-            </button>
-        </section>
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  
+  // Debug: Let's see what elements we're getting
+  console.log("Form found:", form);
+  console.log("Message found:", message);
+  
+  const cafeName = document.getElementById("cafeName").value.trim();
+  const address = document.getElementById("address").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const website = document.getElementById("website").value.trim();
+  const hours = document.getElementById("hours").value.trim();
+  const seats = document.getElementById("seats").value.trim();
+  const outlets = document.getElementById("outlets").value.trim();
+  const noise = document.getElementById("noise").value;
+  const ownerName = document.getElementById("ownerName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+  const description = document.getElementById("description").value.trim();
+  const amenities = document.getElementById("amenities").value.trim();
 
-        <div class="cafe-info">
-            <div class="basic-info">
-                <h2>Cafe Information</h2>
-                <p id="cafe-address"><strong>Address:</strong> Loading...</p>
-                <p id="cafe-phone"><strong>Phone:</strong> Loading...</p>
-                <p id="cafe-hours"><strong>Hours:</strong> Loading...</p>
-                <p id="cafe-website"><strong>Website:</strong> <a href="#" target="_blank">Loading...</a></p>
-                <p id="cafe-about"><strong>About:</strong> Loading...</p>
-                <p id="cafe-amenities"><strong>Amenities:</strong> Loading...</p>
-            </div>
+  // Debug: Let's see what values we're getting
+  console.log("Values:", {cafeName, address, phone, noise, ownerName});
+  
+  // Check required fields
+  if (
+    !cafeName || !address || !phone || !hours || !seats || !outlets || !noise ||
+    !ownerName || !email || !password || !confirmPassword || !description || !amenities
+  ) {
+    message.textContent = "❗ Please complete all required fields.";
+    message.className = "error";
+    console.log("Showing error message");
+    return;
+  }
+  
+  if (password !== confirmPassword) {
+    message.textContent = "❗ Passwords do not match.";
+    message.className = "error";
+    return;
+  }
+  
+  // On success
+  message.textContent = "✅ Cafe registered successfully!";
+  message.className = "success";
+  
+  // Save data to localStorage
+const cafes = JSON.parse(localStorage.getItem("cafes")) || [];
+cafes.push({
+  cafeName,
+  address,
+  phone,
+  website,
+  hours,
+  seats,
+  outlets,
+  noise,
+  ownerName,
+  email,
+  description,
+  amenities,
+});
+localStorage.setItem("cafes", JSON.stringify(cafes));
 
-            <div class="availability-status">
-                <h3>Current Status</h3>
-                <div class="status-grid">
-                    <div class="status-item">
-                        <span class="status-label">Seats Available:</span>
-                        <span id="seats-status" class="status-value available">Loading...</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Power Outlets:</span>
-                        <span id="outlets-status" class="status-value available">Loading...</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Noise Level:</span>
-                        <span id="noise-status" class="status-value moderate">Loading...</span>
-                    </div>
-                </div>
-                <p id="last-updated" class="last-updated">Loading...</p>
-            </div>
-        </div>
-
-        <section id="photo-gallery-section" class="photo-section">
-            <h3>Photo Gallery</h3>
-            <div id="photo-carousel" class="photo-carousel">
-                <button id="prev-button" class="carousel-btn prev-btn" onclick="changeImage(-1)">❮</button>
-                <div id="carousel-container" class="carousel-container">
-                    <img id="carouselImage" src="Interior.webp" alt="Bloom Cafe Interior" onclick="enlargeImage()" />
-                </div>
-                <button id="next-button" class="carousel-btn next-btn" onclick="changeImage(1)">❯</button>
-            </div>
-            <div id="image-counter-container" class="image-counter">
-                <span id="imageCounter">1 / 4</span>
-            </div>
-        </section>
-
-        <!-- Image modal for enlargement -->
-        <div id="imageModal" class="modal" onclick="closeModal()">
-            <span class="modal-close">&times;</span>
-            <img class="modal-content" id="modalImage">
-        </div>
-
-        <section class="reservation-section">
-            <a href="../../my-reservations/index.html" class="reservation-btn">
-                Make Reservation
-            </a>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 Cafe Spot Finder. All rights reserved.</p>
-        <div>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact Us</a>
-        </div>
-    </footer>
-
-    <script>
-        let currentCafe = null;
-        let isFavoriteAdded = false;
-        let images = [];
-        let currentImageIndex = 0;
-
-        // Get cafe ID from URL parameters
-        function getCafeIdFromURL() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('id') || 'Le Génie'; // Default to bloom if no ID provided
-        }
-
-        // Cafe data (embedded to avoid CORS issues)
-        const cafesData = {
-            "bloom": {
-                "id": "bloom",
-                "name": "Bloom Cafe",
-                "address": "596 Yonge St, Toronto, ON M4Y 1Z3",
-                "phone": "(416) 792-0419",
-                "hours": "Monday-Sunday 9:00 AM - 10:00 PM",
-                "website": "https://thebloomcafe.ca/",
-                "about": "A cozy neighborhood cafe serving artisanal coffee and fresh pastries in a warm, welcoming atmosphere perfect for work or relaxation.",
-                "amenities": "free Wi-Fi, indoor seating, wheelchair accessibility, and a gender-neutral washroom",
-                "status": {
-                    "seats": { "available": 8, "total": 15 },
-                    "outlets": { "available": 5, "total": 8 },
-                    "noise": "Moderate",
-                    "lastUpdated": "5 minutes ago"
-                },
-                "images": [
-                    { "src": "Interior.webp", "alt": "Bloom Cafe Interior" },
-                    { "src": "Seats.webp", "alt": "Bloom Cafe Seating Area" },
-                    { "src": "Food.webp", "alt": "Bloom Cafe Food" },
-                    { "src": "Exterior.webp", "alt": "Bloom Cafe Exterior" }
-                ]
-            },
-            "Good Earth": {
-                "id": "Good Earth",
-                "name": "Good Earth Coffeehouse",
-                "address": "8 Wellesley St E unit 102, Toronto, ON M4Y 3B2",
-                "phone": "(416) 964-0112",
-                "hours": "Monday-Friday 6:00 AM - 8:00 PM, Saturday-Sunday 7:00 AM - 8:00 PM",
-                "website": "https://goodearthcoffeehouse.com/",
-                "about": "The coffee we serve is selected for both exceptional taste and for the positive impact our purchases can create. With our roaster, we search for coffee farms where sustainability and social responsibility are practiced. We also look for Rainforest Alliance, Fair Trade and Organic certifications.",
-                "amenities": "Free WiFi, Power Outlets, indoor Seating, Takeaway Available, Card Payment Accepted, Washroom",
-                "status": {
-                    "seats": { "available": 12, "total": 20 },
-                    "outlets": { "available": 6, "total": 10 },
-                    "noise": "Quiet",
-                    "lastUpdated": "2 minutes ago"
-                },
-                "images": [
-                    { "src": "GoodE_exterior.webp", "alt": "GoodE_exterior" },
-                    { "src": "GoodE_food.webp", "alt": "GoodE_food" },
-                    { "src": "GoodE_interior.webp", "alt": "GoodE_interior" },
-                    { "src": "GoodE_menu.webp", "alt": "GoodE_menu" }
-                ]
-            },
-            "Le Génie": {
-                "id": "Le Génie",
-                "name": "Le Génie Bakery & Espresso",
-                "address": "382 Yonge St First Floor, Toronto, ON M5B 1S8",
-                "phone": "(416) 546-8578",
-                "hours": "Monday Closed, Tuesday-Thursday 7:30 AM - 6:30 PM, Friday 7:30 AM - 7:00 PM, Saturday 9:00 AM - 7:00 PM, Sunday 9:00 AM - 6:30 PM",
-                "website": "https://www.le-genie.ca/",
-                "about": "At Le Genie, our commitment to excellence extends beyond our masterful pastries to an exceptional coffee experience that rivals the finest in the world. We proudly serve beans from Tim Wendelboe, a world champion roaster, bringing his unparalleled expertise to every cup. ",
-                "amenities": "Free WiFi, Power Outlets, Outdoor Patio, Indoor Seating, Cash & Card Accepted, Washroom",
-                "status": {
-                    "seats": { "available": 6, "total": 12 },
-                    "outlets": { "available": 2, "total": 4 },
-                    "noise": "Loud",
-                    "lastUpdated": "8 minutes ago"
-                },
-                "images": [
-                    { "src": "Le_exterior.webp", "alt": "Le_exterior" },
-                    { "src": "Le_food.webp", "alt": "Le_food" },
-                    { "src": "Le_interior.webp", "alt": "Le_interior" },
-                    { "src": "Le_menu.webp", "alt": "Le_menu" }
-                ]
-            }
-        };
-
-        // Load cafe data from embedded data
-        function loadCafeData() {
-            try {
-                const cafeId = getCafeIdFromURL();
-                
-                if (cafesData[cafeId]) {
-                    currentCafe = cafesData[cafeId];
-                    populateCafeData(currentCafe);
-                } else {
-                    showError('Cafe not found');
-                }
-            } catch (error) {
-                console.error('Error loading cafe data:', error);
-                showError('Error loading cafe data');
-            }
-        }
-
-        // Populate page with cafe data
-        function populateCafeData(cafe) {
-            // Update page title
-            document.getElementById('page-title').textContent = `${cafe.name} - Cafe Spot Finder`;
-            
-            // Update cafe information
-            document.getElementById('cafe-name').textContent = cafe.name;
-            document.getElementById('cafe-address').innerHTML = `<strong>Address:</strong> ${cafe.address}`;
-            document.getElementById('cafe-phone').innerHTML = `<strong>Phone:</strong> ${cafe.phone}`;
-            document.getElementById('cafe-hours').innerHTML = `<strong>Hours:</strong> ${cafe.hours}`;
-            document.getElementById('cafe-website').innerHTML = `<strong>Website:</strong> <a href="${cafe.website}" target="_blank">${cafe.website}</a>`;
-            document.getElementById('cafe-about').innerHTML = `<strong>About:</strong> ${cafe.about}`;
-            document.getElementById('cafe-amenities').innerHTML = `<strong>Amenities:</strong> ${cafe.amenities}`;
-            
-            // Update status information
-            document.getElementById('seats-status').textContent = `${cafe.status.seats.available}/${cafe.status.seats.total}`;
-            document.getElementById('outlets-status').textContent = `${cafe.status.outlets.available}/${cafe.status.outlets.total}`;
-            
-            const noiseElement = document.getElementById('noise-status');
-            noiseElement.textContent = cafe.status.noise;
-            noiseElement.className = `status-value ${cafe.status.noise.toLowerCase()}`;
-            
-            document.getElementById('last-updated').textContent = `Last updated ${cafe.status.lastUpdated}`;
-            
-            // Update images
-            images = cafe.images;
-            if (images.length > 0) {
-                const carouselImage = document.getElementById('carouselImage');
-                carouselImage.src = images[0].src;
-                carouselImage.alt = images[0].alt;
-                document.getElementById('imageCounter').textContent = `1 / ${images.length}`;
-            }
-        }
-
-        function showError(message) {
-            document.getElementById('cafe-name').textContent = 'Error';
-            document.getElementById('cafe-address').innerHTML = `<strong>Error:</strong> ${message}`;
-        }
-
-        function toggleFavorite() {
-            if (!currentCafe) return;
-
-            const isLoggedIn = true; // 🔁 Replace with real login check if needed
-
-            if (!isLoggedIn) {
-            window.location.href = '../../login/index.html';
-                return;
-            }
-            
-            const btn = document.querySelector('.favorite-btn');
-            const heart = btn.querySelector('.heart');
-
-            if (!isFavoriteAdded) {
-                heart.textContent = '♥';
-                btn.innerHTML = `<span class="heart" style="color: #a87544;">♥</span> Added to Favorites`;
-                alert(`${currentCafe.name} added to your favorites!`);
-            }
-            else {
-                heart.textContent = '♡';
-                btn.innerHTML = `<span class="heart" style="color: #a87544;">♡</span> Add to Favorites`;
-                alert(`${currentCafe.name} removed from favorites.`);
-            }
-            isFavoriteAdded = !isFavoriteAdded; // A variable record the current status: removing favorite or adding favorite
-        }
-                
-        function changeImage(direction) {
-            if (images.length === 0) return;
-            
-            currentImageIndex += direction;
-            if (currentImageIndex >= images.length) {
-                currentImageIndex = 0;
-            } else if (currentImageIndex < 0) {
-                currentImageIndex = images.length - 1;
-            }
-            
-            const carouselImage = document.getElementById('carouselImage');
-            carouselImage.src = images[currentImageIndex].src;
-            carouselImage.alt = images[currentImageIndex].alt;
-            
-            document.getElementById('imageCounter').textContent = `${currentImageIndex + 1} / ${images.length}`;
-        }
-
-        function enlargeImage() {
-            if (images.length === 0) return;
-            
-            const modal = document.getElementById('imageModal');
-            const modalImage = document.getElementById('modalImage');
-            
-            modal.style.display = 'block';
-            modalImage.src = images[currentImageIndex].src;
-            modalImage.alt = images[currentImageIndex].alt;
-        }
-
-        function closeModal() {
-            document.getElementById('imageModal').style.display = 'none';
-        }
+// Redirect to fusettes.html after 1.5 seconds
+setTimeout(() => {
+  window.location.href = "fusettes.html";
+}, 1500);
 
 
-        // Load cafe data when page loads
-        document.addEventListener('DOMContentLoaded', loadCafeData);
-    </script>
+// Favorites
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('favorites-container');
+  if (!container) return;
 
-    <style>
-        header {
-            border-bottom: none !important;
-        }
-        
-        .cafe-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 32px;
-            position: relative;
-        }
+  const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 
-        .cafe-header h1 {
-            color: #2c1b1b;
-            margin: 0;
-            text-align: center;
-            font-size: 36px;
-        }
+  if (favorites.length === 0) {
+    container.innerHTML = '<p style="font-size: 1.2rem; margin: 2rem auto;">No favorite cafes yet.</p>';
+    return;
+  }
 
-        .favorite-btn {
-            position: absolute;
-            right: 32px;
-        }
+  favorites.forEach(cafe => {
+    const card = document.createElement('div');
+    card.className = 'card';
 
-        .favorite-btn {
-            background-color: #d8bfa4;
-            border: none;
-            padding: 13px 24px;
-            border-radius: 8px;
-            font-family: 'Lexend', sans-serif;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    card.innerHTML = `
+      <img src="../../detail/images/${cafe.images[0].src}" alt="${cafe.images[0].alt}" />
+      <div class="card-content">
+        <h4>${cafe.name}</h4>
+        <p><strong>Location:</strong> ${cafe.address}</p>
+        <p><strong>Rating:</strong> ${cafe.rating || 'N/A'}</p>
+        <p><strong>Tags:</strong> ${cafe.amenities}</p>
+        <button class="remove-btn" onclick="removeFromFavorites('${cafe.id}')">Remove</button>
+      </div>
+    `;
 
-        .favorite-btn:hover {
-            background-color: #c6a98c;
-        }
+    container.appendChild(card);
+  });
+});
 
-        .heart {
-            color: #a87544;
-            font-size: 19px;
-        }
-
-        .cafe-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 32px;
-            padding: 32px;
-            background-color: #fff8f2;
-        }
-
-        .basic-info p {
-            margin: 8px 0;
-            line-height: 1.6;
-        }
-
-        .availability-status {
-            background-color: #fdfaf5;
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            height: fit-content;
-            min-height: 200px;
-        }
-
-        .status-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 16px;
-        }
-
-        .status-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            background-color: #f5eadd;
-            border-radius: 6px;
-        }
-
-        .status-value.available {
-            color: #28a745;
-            font-weight: 600;
-        }
-
-        .status-value.moderate {
-            color: #ffc107;
-            font-weight: 600;
-        }
-
-        .status-value.quiet {
-            color: #28a745;
-            font-weight: 600;
-        }
-
-        .status-value.loud {
-            color: #dc3545;
-            font-weight: 600;
-        }
-
-        .last-updated {
-            margin-top: 16px;
-            font-size: 12px;
-            color: #999;
-            text-align: center;
-            font-style: italic;
-        }
-
-        #photo-gallery-section {
-            padding: 32px;
-            text-align: center;
-        }
-
-        #photo-carousel {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin: 32px 0;
-        }
-
-        #carousel-container {
-            position: relative;
-            max-width: 500px;
-            width: 100%;
-        }
-
-        #carouselImage {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        #carouselImage:hover {
-            transform: scale(1.02);
-        }
-
-        #prev-button, #next-button {
-            background-color: #a87544;
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #prev-button:hover, #next-button:hover {
-            background-color: #895d30;
-        }
-
-        #image-counter-container {
-            margin-top: 16px;
-            font-weight: 500;
-            color: #3b2f2f;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            cursor: pointer;
-        }
-
-        .modal-content {
-            display: block;
-            margin: auto;
-            max-width: 90%;
-            max-height: 90%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: 8px;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .modal-close:hover {
-            color: #ccc;
-        }
-
-        .reservation-btn {
-            background-color: #a87544;
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 8px;
-            font-family: 'Lexend', sans-serif;
-            font-weight: 500;
-            font-size: 18px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin: 16px;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .reservation-btn:hover {
-            background-color: #895d30;
-        }
-
-        .reservation-section {
-            padding: 32px;
-            text-align: center;
-            background-color: #fdf6f0;
-        }
-
-        @media (max-width: 768px) {
-            .cafe-header {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .cafe-info {
-                grid-template-columns: 1fr;
-            }
-
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            }
-        }
-    </style>
-</body>
-</html>
+function removeFromFavorites(cafeId) {
+  let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+  favorites = favorites.filter(f => f.id !== cafeId);
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+  window.location.reload();
+}
