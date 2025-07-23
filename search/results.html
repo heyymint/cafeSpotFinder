@@ -40,7 +40,7 @@
         <nav>
             <a href="../search/index.html">Search</a>
             <a href="../my-favorites/index.html">My Favorites</a>
-            <a href="../login/index.html">Login</a>
+            <a href="../login/index.html" id="loginLogoutBtn">Login</a>
         </nav>
     </header>
     <main>
@@ -152,6 +152,30 @@
         persistentSearchBtn.addEventListener('click', () => {
             window.location.href = './index.html';
         });
+    });
+
+     // Check status button login for switch button Login/Logout
+     window.addEventListener("DOMContentLoaded", () => {
+        const loginLogoutBtn = document.getElementById("loginLogoutBtn");
+        const userEmail = localStorage.getItem("currentUser");
+
+        if (userEmail) {
+            // Switch button to Logout
+            loginLogoutBtn.textContent = "Logout";
+            loginLogoutBtn.href = "#"; 
+
+            loginLogoutBtn.addEventListener("click", (e) => {
+                e.preventDefault(); 
+            
+                // Clear currentUser for logout
+                localStorage.removeItem("currentUser");
+                localStorage.removeItem("loggedIn");
+
+                // redirect go to login
+                window.location.href = "../login/index.html";
+                
+            });
+        }
     });
     </script>
 </body>
