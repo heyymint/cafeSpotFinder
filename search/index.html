@@ -1,77 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Café Spot Finder - Find Your Spot</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café Spot Finder - Search Results</title>
     
     <link rel="stylesheet" href="../css/styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@500&family=Lexend:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* This ensures the footer stays at the bottom on short pages */
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        /* This is the main content area for the search bar */
-        .search-main {
-            flex-grow: 1; /* Takes up available space */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem 1rem;
-        }
-        /* The search box itself, styled like a .card from your teammate's CSS */
-        .search-box {
-            background-color: #fdfaf5; /* Color from .card */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow from .card */
-            border-radius: 12px; /* Border from .card */
-            padding: 2.5rem;
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-        }
-        .search-box h2 {
-            font-size: 2.2rem; /* A bit smaller than .hero h2 */
-            color: #2c1b1b;
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-        }
-        .search-box p {
-            font-size: 1.1rem; /* A bit smaller than .hero p */
-            margin-bottom: 2rem;
-            color: #3b2f2f;
-        }
-        /* The input field for location */
-        .search-input {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 2px solid #e3d5c4; /* Border from header */
-            border-radius: 8px;
-            font-family: 'Lexend', sans-serif;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            box-sizing: border-box; /* Important for padding and width */
-        }
-        /* The search button, styled like .hero .cta-buttons button */
-        .search-button {
-            font-family: 'Lexend', sans-serif;
-            font-weight: 500;
-            background-color: #a87544; /* Color from .cta-buttons button */
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            width: 100%;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .search-button:hover {
-            background-color: #895d30; /* Hover color from .cta-buttons button */
-        }
+        /* No changes needed in CSS */
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+        main { flex-grow: 1; padding: 2rem 1rem; }
+        .results-heading { font-size: 2.5rem; font-weight: 700; color: #2c1b1b; text-align: center; margin-bottom: 2rem; }
+        .results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .cafe-card { background-color: #fdfaf5; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .cafe-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); }
+        .cafe-card img { width: 100%; height: 180px; object-fit: cover; }
+        .cafe-card-content { padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column; }
+        .cafe-card-title { font-size: 1.5rem; font-weight: 600; color: #2c1b1b; margin: 0 0 0.25rem 0; }
+        .cafe-card-address { font-size: 0.9rem; color: #3b2f2f; margin-bottom: 1rem; }
+        .cafe-card-info { font-size: 0.95rem; margin-bottom: 0.5rem; display: flex; align-items: center; }
+        .cafe-card-info-label { color: #555; margin-right: 0.5rem; }
+        .cafe-card-info-value { font-weight: 600; }
+        .details-button { font-family: 'Lexend', sans-serif; font-weight: 500; background-color: #a87544; color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 8px; font-size: 1rem; width: 100%; cursor: pointer; transition: background-color 0.3s ease; margin-top: auto; }
+        .details-button:hover { background-color: #895d30; }
+        .status-high { color: #16a34a; }
+        .status-moderate { color: #eab308; }
+        .status-low { color: #dc2626; }
+        .no-results { text-align: center; font-size: 1.2rem; color: #555; padding: 3rem 1rem; display: none; }
+        .search-again-button { font-family: 'Lexend', sans-serif; font-weight: 500; background-color: #a87544; color: white; border: none; padding: 0.8rem 1.8rem; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: background-color 0.3s ease; margin-top: 1.5rem; }
+        .search-again-button:hover { background-color: #895d30; }
+        .persistent-search-container { text-align: center; padding: 3rem 1rem 1rem 1rem; display: none; }
     </style>
 </head>
 <body>
@@ -80,23 +40,24 @@
         <nav>
             <a href="../search/index.html">Search</a>
             <a href="../my-favorites/index.html">My Favorites</a>
-            <a href="../login/index.html">Login</a>
+            <a href="../login/index.html" id="loginLogoutBtn">Login</a>
         </nav>
     </header>
-
-    <main class="search-main">
-        <div class="search-box">
-            <h2>Find Your Perfect Café Spot</h2>
-            <p>Enter a location to discover cafés with availability.</p>
-            <div>
-                <input type="text" id="locationSearchInput" placeholder="e.g., Yonge St, Dundas St" class="search-input">
-                <button id="searchButton" class="search-button">
-                    Search Cafés
-                </button>
-            </div>
+    <main>
+        <h2 id="resultsHeading" class="results-heading"></h2>
+        <div id="cafeList" class="results-grid"></div>
+        <div id="noResultsMessage" class="no-results">
+            <p>No cafés found for this location. Please try another search.</p>
+            <button id="searchAgainBtn" class="search-again-button">
+                🔎 Search Again
+            </button>
+        </div>
+        <div id="persistentSearchContainer" class="persistent-search-container">
+            <button id="persistentSearchBtn" class="search-again-button">
+                🔎 Search Another Location
+            </button>
         </div>
     </main>
-
    <footer>
         <p>&copy; 2024 Cafe Spot Finder. All rights reserved.</p>
         <div>
@@ -107,22 +68,115 @@
     </footer>
 
     <script>
-        const locationInput = document.getElementById('locationSearchInput');
-        const searchBtn = document.getElementById('searchButton');
-        function performSearch() {
-            const location = locationInput.value.trim();
-            if (location) {
-                window.location.href = `results.html?location=${encodeURIComponent(location)}`;
-            } else {
-                alert("Please enter a location to search.");
-            }
+    const allCafes = [
+        { id: 'bloom', name: 'Bloom Cafe', location: 'Yonge St', address: '596 Yonge St, Toronto, ON M4Y 1Z3', simulatedSeatsAvailable: 'Many Seats Available', simulatedNoiseLevel: 'Moderate', imageUrl: '../cafes/cafe_detail/Exterior.webp' },
+        { id: 'Good Earth', name: 'Good Earth Coffeehouse', location: 'Wellesley St', address: '8 Wellesley St E unit 102, Toronto, ON M4Y 3B2', simulatedSeatsAvailable: 'Many Seats Available', simulatedNoiseLevel: 'Quiet', imageUrl: '../cafes/cafe_detail/GoodE_exterior.webp' },
+        { id: 'Le Génie', name: 'Le Génie Bakery & Espresso', location: 'Yonge St', address: '382 Yonge St First Floor, Toronto, ON M5B 1S8', simulatedSeatsAvailable: 'Few Seats Left', simulatedNoiseLevel: 'Loud', imageUrl: '../cafes/cafe_detail/Le_exterior.webp' }
+    ];
+
+    const resultsHeading = document.getElementById('resultsHeading');
+    const cafeListContainer = document.getElementById('cafeList');
+    const noResultsMessage = document.getElementById('noResultsMessage');
+    const persistentSearchContainer = document.getElementById('persistentSearchContainer');
+
+    function getQueryParams() {
+        const params = {};
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        for (const [key, value] of urlParams.entries()) {
+            params[key] = value;
         }
-        searchBtn.addEventListener('click', performSearch);
-        locationInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                performSearch();
-            }
+        return params;
+    }
+
+    function displayCafes(cafesToDisplay, searchedLocation) {
+        // Set the page heading first
+        if (searchedLocation) {
+            resultsHeading.textContent = `Cafés near "${searchedLocation}"`;
+        } else {
+            resultsHeading.textContent = `All Cafés`;
+        }
+        
+        // Clear previous results before the new logic
+        cafeListContainer.innerHTML = '';
+
+        if (cafesToDisplay.length === 0) {
+            // This runs when NO results are found
+            noResultsMessage.style.display = 'block';      // SHOW the 'no results' message
+            persistentSearchContainer.style.display = 'none'; // HIDE the other button
+        } else {
+            // This runs when there ARE results
+            noResultsMessage.style.display = 'none';      // HIDE the 'no results' message
+            persistentSearchContainer.style.display = 'block'; // SHOW the other button
+
+            // Build and display each cafe card
+            cafesToDisplay.forEach(cafe => {
+                let seatsColorClass = 'status-low';
+                if (cafe.simulatedSeatsAvailable === 'Many Seats Available') seatsColorClass = 'status-high';
+                if (cafe.simulatedSeatsAvailable === 'Few Seats Left') seatsColorClass = 'status-moderate';
+                let noiseColorClass = 'status-low';
+                if (cafe.simulatedNoiseLevel === 'Quiet') noiseColorClass = 'status-high';
+                if (cafe.simulatedNoiseLevel === 'Moderate') noiseColorClass = 'status-moderate';
+                const cafeCard = document.createElement('div');
+                cafeCard.className = 'cafe-card';
+                cafeCard.innerHTML = `<img src="${cafe.imageUrl}" alt="Photo of ${cafe.name}"><div class="cafe-card-content"><h3 class="cafe-card-title">${cafe.name}</h3><p class="cafe-card-address">${cafe.address.split(',')[0]}</p><div class="cafe-card-info"><span class="cafe-card-info-label">Seats:</span><span class="cafe-card-info-value ${seatsColorClass}">${cafe.simulatedSeatsAvailable}</span></div><div class="cafe-card-info"><span class="cafe-card-info-label">Noise:</span><span class="cafe-card-info-value ${noiseColorClass}">${cafe.simulatedNoiseLevel}</span></div><button class="details-button view-details-btn" data-cafe-id="${cafe.id}">View Details</button></div>`;
+                const viewDetailsButton = cafeCard.querySelector('.view-details-btn');
+                viewDetailsButton.addEventListener('click', () => {
+                    window.location.href = `../cafes/cafe_detail/index.html?id=${cafe.id}`;
+                });
+                cafeListContainer.appendChild(cafeCard);
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // No changes to this section
+        const params = getQueryParams();
+        const searchedLocation = params.location ? decodeURIComponent(params.location) : '';
+        let filteredCafes = [];
+        if (searchedLocation) {
+            filteredCafes = allCafes.filter(cafe =>
+                cafe.location.toLowerCase().includes(searchedLocation.toLowerCase())
+            );
+        } else {
+            filteredCafes = allCafes;
+        }
+        displayCafes(filteredCafes, searchedLocation);
+        
+        const noResultsSearchBtn = document.getElementById('searchAgainBtn');
+        noResultsSearchBtn.addEventListener('click', () => {
+            window.location.href = './index.html'; 
         });
+        
+        const persistentSearchBtn = document.getElementById('persistentSearchBtn');
+        persistentSearchBtn.addEventListener('click', () => {
+            window.location.href = './index.html';
+        });
+    });
+
+     // Check status button login for switch button Login/Logout
+     window.addEventListener("DOMContentLoaded", () => {
+        const loginLogoutBtn = document.getElementById("loginLogoutBtn");
+        const userEmail = localStorage.getItem("currentUser");
+
+        if (userEmail) {
+            // Switch button to Logout
+            loginLogoutBtn.textContent = "Logout";
+            loginLogoutBtn.href = "#"; 
+
+            loginLogoutBtn.addEventListener("click", (e) => {
+                e.preventDefault(); 
+            
+                // Clear currentUser for logout
+                localStorage.removeItem("currentUser");
+                localStorage.removeItem("loggedIn");
+
+                // redirect go to login
+                window.location.href = "../login/index.html";
+                
+            });
+        }
+    });
     </script>
 </body>
 </html>

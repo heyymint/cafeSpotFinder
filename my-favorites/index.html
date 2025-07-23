@@ -6,15 +6,106 @@
   <title>My Favourites - Cafe Spot Finder</title>
   <link rel="stylesheet" href="../css/styles.css" />
   <style>
-    .empty-state{padding:2rem;text-align:center;color:#666;font-style:italic;}
-    .card-section{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem;padding:2rem;}
-    .card{background:#fff;border:1px solid #e0d7ce;border-radius:8px;overflow:hidden;box-shadow:0 2px 4px rgba(0,0,0,.08);display:flex;flex-direction:column;}
-    .card img{width:100%;height:160px;object-fit:cover;}
-    .card-content{padding:1rem;display:flex;flex-direction:column;gap:.25rem;}
-    .card-content h4{margin:0;color:#2c1b1b;}
-    .card-content p{margin:0;font-size:.9rem;color:#5c4c4c;}
-    .card-content .fav-toggle{margin-top:.5rem;align-self:flex-start;background:none;border:none;cursor:pointer;font-size:1.25rem;line-height:1;}
-    .card-content .detail-link{margin-top:.5rem;align-self:flex-start;font-size:.85rem;color:#a87544;text-decoration:underline;}
+    .empty-state {
+      padding: 2rem;
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+
+    .card-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e0d7ce;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .card-content h4 {
+      margin: 0;
+      color: #2c1b1b;
+    }
+
+    .card-content p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #5c4c4c;
+    }
+
+    .card-content .fav-toggle {
+      margin-top: 0.5rem;
+      align-self: flex-start;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.25rem;
+      line-height: 1;
+      color: #a87544;
+    }
+
+    .card-content .detail-link {
+      margin-top: 0.5rem;
+      align-self: flex-start;
+      font-size: 0.85rem;
+      color: #a87544;
+      text-decoration: underline;
+    }
+
+    .login-reminder {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      font-family: 'Lexend', sans-serif;
+      font-size: 18px;
+      color: #3b2f2f;
+      text-align: center;
+      flex-wrap: wrap;
+    }
+
+    .login-alert-btn {
+      display: inline-block;
+      background-color: #a87544;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 16px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .login-alert-btn:hover {
+      background-color: #895d30;
+    }
+
+    #favorites-list {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   </style>
 </head>
 <body>
@@ -23,7 +114,7 @@
     <nav>
       <a href="../search/index.html">Search</a>
       <a href="../my-favorites/index.html">My Favorites</a>
-      <a href="../login/index.html">Login</a>
+      <a href="../login/index.html" id="loginLogoutBtn">Login</a>
     </nav>
   </header>
 
@@ -42,11 +133,146 @@
     </div>
   </footer>
 
-  <!-- Toast container injected by JS when needed -->
+  <script>
+    const cafesData = {
+      "bloom": {
+        id: "bloom",
+        name: "Bloom Cafe",
+        address: "596 Yonge St, Toronto, ON M4Y 1Z3",
+        about: "A cozy neighborhood cafe serving artisanal coffee and fresh pastries in a warm, welcoming atmosphere perfect for work or relaxation.",
+        images: [{ src: "../cafes/cafe_detail/Exterior.webp", alt: "Bloom Cafe Interior" }]
+      },
+      "Good Earth": {
+        id: "Good Earth",
+        name: "Good Earth Coffeehouse",
+        address: "8 Wellesley St E unit 102, Toronto, ON M4Y 3B2",
+        about: "The coffee we serve is selected for both exceptional taste and for the positive impact our purchases can create.",
+        images: [{ src: "../cafes/cafe_detail/GoodE_exterior.webp", alt: "Good Earth Exterior" }]
+      },
+      "Le Génie": {
+        id: "Le Génie",
+        name: "Le Génie Bakery & Espresso",
+        address: "382 Yonge St First Floor, Toronto, ON M5B 1S8",
+        about: "At Le Genie, our commitment to excellence extends beyond our masterful pastries to an exceptional coffee experience that rivals the finest in the world.",
+        images: [{ src: "../cafes/cafe_detail/Le_exterior.webp", alt: "Le Génie Exterior" }]
+      }
+    };
 
-  <script src="../js/main.js" defer></script>
-  <script defer>
-    document.addEventListener('DOMContentLoaded', CSF.renderFavoritesPage);
+    function renderFavoritesPage() {
+      const email = localStorage.getItem("currentUser");
+      const loggedIn = localStorage.getItem("loggedIn");
+
+      const favoritesSection = document.getElementById("favorites-list");
+      const noFavMessage = document.getElementById("no-favorites");
+
+      if (!loggedIn || loggedIn !== "true" || !email) {
+        noFavMessage.textContent = "You must be logged in to view your favourites.";
+        noFavMessage.hidden = false;
+        return;
+      }
+
+      const favoritesKey = `favorites_${email}`;
+      const favoriteIds = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+
+      if (favoriteIds.length === 0) {
+        noFavMessage.hidden = false;
+        favoritesSection.innerHTML = "";
+        return;
+      }
+
+      favoritesSection.innerHTML = "";
+      noFavMessage.hidden = true;
+
+      favoriteIds.forEach(id => {
+        const cafe = cafesData[id];
+        if (!cafe) return;
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const img = document.createElement("img");
+        img.src = cafe.images[0].src;
+        img.alt = cafe.images[0].alt;
+
+        const content = document.createElement("div");
+        content.className = "card-content";
+
+        const name = document.createElement("h4");
+        name.textContent = cafe.name;
+
+        const address = document.createElement("p");
+        address.textContent = cafe.address;
+
+        const about = document.createElement("p");
+        about.textContent = cafe.about.length > 80 ? cafe.about.slice(0, 80) + "..." : cafe.about;
+
+        const detailLink = document.createElement("a");
+        detailLink.href = `../cafes/cafe_detail/index.html?id=${cafe.id}`;
+        detailLink.textContent = "View details";
+        detailLink.className = "detail-link";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "fav-toggle";
+        removeBtn.innerHTML = "♥";
+        removeBtn.title = "Remove from favorites";
+
+        removeBtn.onclick = () => {
+          removeFavorite(cafe.id, email);
+        };
+
+        content.appendChild(name);
+        content.appendChild(address);
+        content.appendChild(about);
+        content.appendChild(detailLink);
+        content.appendChild(removeBtn);
+
+        card.appendChild(img);
+        card.appendChild(content);
+        favoritesSection.appendChild(card);
+      });
+    }
+
+    function removeFavorite(cafeId, email) {
+      const favoritesKey = `favorites_${email}`;
+      const currentFavs = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+      const updatedFavs = currentFavs.filter(id => id !== cafeId);
+      localStorage.setItem(favoritesKey, JSON.stringify(updatedFavs));
+      renderFavoritesPage();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => {
+        const loggedIn = localStorage.getItem("loggedIn");
+        const currentUser = localStorage.getItem("currentUser");
+
+        if (loggedIn === "true" && currentUser) {
+          renderFavoritesPage();
+        } else {
+          document.getElementById("favorites-list").innerHTML = `
+            <div class="login-reminder">
+              <span>You must be logged in to view your favourites.</span>
+              <a href="../login/index.html" class="login-alert-btn">Login Now</a>
+            </div>
+          `;
+        }
+      }, 200);
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const loginLogoutBtn = document.getElementById("loginLogoutBtn");
+      const userEmail = localStorage.getItem("currentUser");
+
+      if (userEmail) {
+        loginLogoutBtn.textContent = "Logout";
+        loginLogoutBtn.href = "#";
+        loginLogoutBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          localStorage.removeItem("currentUser");
+          localStorage.removeItem("loggedIn");
+          window.location.href = "../login/index.html";
+        });
+      }
+    });
   </script>
 </body>
 </html>

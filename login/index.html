@@ -13,85 +13,84 @@
 </header>
   <style>
     /* Shared Navigation Styles */
-header {
-    background-color: #f5eadd;
-    padding: 16px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-}
-
-header h1 {
-    font-size: 32px;
-    font-weight: 700;
-}
-
-header h1 a {
-    color: inherit;
-    text-decoration: none;
-    
-}
-
-nav {
-    display: flex;
-    gap: 19px;
-}
-
-nav a {
-    font-family: 'Lexend', sans-serif;
-    font-weight: 500;
-    background-color: #d8bfa4;
-    padding: 8px 16px;
-    border-radius: 10px;
-    transition: background-color 0.3s ease;
-    font-size: 16px;
-    display: inline-block;
-    text-decoration: none;
-    color: inherit;
-}
-
-nav a:hover {
-    background-color: #c6a98c;
-    cursor: pointer;
-}
-
-nav a.active {
-    background-color: #a87544;
-    color: white;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
     header {
-        flex-direction: column;
-        gap: 16px;
-        padding: 16px;
+        background-color: #f5eadd;
+        padding: 16px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
     }
-    
-    nav {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 12px;
-    }
-    
-    nav a {
-        font-size: 14px;
-        padding: 6px 12px;
-    }
-    
-    header h1 {
-        font-size: 24px;
-    }
-}
-   body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Lexend', sans-serif;
-  background-color: #fdf6f0;
-  color: #3b2f2f;
-}
 
+    header h1 {
+        font-size: 32px;
+        font-weight: 700;
+    }
+
+    header h1 a {
+        color: inherit;
+        text-decoration: none;
+        
+    }
+
+    nav {
+        display: flex;
+        gap: 19px;
+    }
+
+    nav a {
+        font-family: 'Lexend', sans-serif;
+        font-weight: 500;
+        background-color: #d8bfa4;
+        padding: 8px 16px;
+        border-radius: 10px;
+        transition: background-color 0.3s ease;
+        font-size: 16px;
+        display: inline-block;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    nav a:hover {
+        background-color: #c6a98c;
+        cursor: pointer;
+    }
+
+    nav a.active {
+        background-color: #a87544;
+        color: white;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px;
+        }
+        
+        nav {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        nav a {
+            font-size: 14px;
+            padding: 6px 12px;
+        }
+        
+        header h1 {
+            font-size: 24px;
+        }
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Lexend', sans-serif;
+      background-color: #fdf6f0;
+      color: #3b2f2f;
+    }
 
     h2 {
       font-weight: 700;
@@ -208,6 +207,7 @@ nav a.active {
       text-decoration: underline;
       cursor: pointer;
     }
+
   </style>
 </head>
 <body>
@@ -215,9 +215,9 @@ nav a.active {
   <h2>Welcome Back</h2>
 
   <form name=loginForm>
-    <input name=email placeholder=Email>
-    <input name=password placeholder=Password type=password>
-    
+    <input name="email" placeholder="Email">
+    <input name="password" placeholder="Password" type="password">
+     
     <div class="button-row">
       <a href="../register-user/index.html" id="signupBtn">Sign Up</a>
       <button name=submitBtn disabled>Login</button>
@@ -254,87 +254,84 @@ nav a.active {
       error.style.display = 'none'
     }
 
-    form.onsubmit = function () { alert(' login ');
-      const savedUser = JSON.parse(localStorage.getItem("user")); alert('savedUser.email ' +savedUser.email +  'email.value ' +  email.value())
-      if (savedUser && savedUser.email === email.value() && savedUser.password === password.value()) {
-        //showToast("✅ Login successful!");
-        setTimeout(() => {
-          window.location.href = "landpage.html?user=" + email;
-        }, 1500);
-        return false
+    form.onsubmit = function () { 
+      event.preventDefault(); 
+
+      const inputEmail = email.value.trim();
+      const inputPassword = password.value;
+
+      // Load users from localStorage
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+      // Find user at email+password match
+      const matchedUser = users.find(u => u.email === inputEmail && u.password === inputPassword);
+
+      if (matchedUser) {
+        // Save current user login
+        localStorage.setItem("loggedIn", "true");
+        localStorage.setItem("currentUser", inputEmail);
+
+        window.location.href = "../landpage/index.html";
       } else {
-        //showToast("❌ Invalid email or password", true);
-        error.style.display = 'block'
-        return false
+        error.style.display = "block";
+    }
+
+    return false; 
+  }
+
+  // Shared Navigation Component
+  function createNavigation(currentPage = '') {
+      const basePath = getBasePath();      
+      return `
+          <header>
+              <h1><a href="${basePath}index.html">Cafe Spot Finder</a></h1>
+              <nav>
+                  <a href="${basePath}search/index.html" ${currentPage === 'search' ? 'class="active"' : ''}>Search</a>
+                  <a href="${basePath}my-favorites/index.html" ${currentPage === 'favorites' ? 'class="active"' : ''}>My Favorites</a>
+                  <a href="${basePath}login/index.html" ${currentPage === 'login' ? 'class="active"' : ''}>Login</a>
+              </nav>
+          </header>
+      `;
+  }
+
+  // Determine the base path based on current location
+  function getBasePath() {
+      const path = window.location.pathname;
+      const depth = (path.match(/\//g) || []).length - 1;
+      
+      if (path.includes('/cafes/')) {
+          return '../../';
+      } else if (depth > 1) {
+          return '../';
+      } else {
+          return '';
       }
+  }
 
-      /*if (email.value == '123') {
-        if (password.value == '123') {
-          window.location.href = '../landpage.html';
-          return false
-        } else {
-          error.style.display = 'block'
-          return false
-        }
-      } else {
-        error.style.display = 'block'
-        return false
-      }*/
-    }
-    // Shared Navigation Component
-function createNavigation(currentPage = '') {
-    const basePath = getBasePath();
-    
-    return `
-        <header>
-            <h1><a href="${basePath}index.html">Cafe Spot Finder</a></h1>
-            <nav>
-                <a href="${basePath}search/index.html" ${currentPage === 'search' ? 'class="active"' : ''}>Search</a>
-                <a href="${basePath}my-favorites/index.html" ${currentPage === 'favorites' ? 'class="active"' : ''}>My Favorites</a>
-                <a href="${basePath}login/index.html" ${currentPage === 'login' ? 'class="active"' : ''}>Login</a>
-            </nav>
-        </header>
-    `;
-}
+  // Load navigation into the page
+  function loadNavigation(currentPage = '') {
+      document.addEventListener('DOMContentLoaded', function() {
+          const navigationHTML = createNavigation(currentPage);
+          
+          // Find existing header or create one
+          let header = document.querySelector('header');
+          if (header) {
+              header.outerHTML = navigationHTML;
+          } else {
+              // Insert at the beginning of body
+              document.body.insertAdjacentHTML('afterbegin', navigationHTML);
+          }
+      });
+  }
 
-// Determine the base path based on current location
-function getBasePath() {
-    const path = window.location.pathname;
-    const depth = (path.match(/\//g) || []).length - 1;
-    
-    if (path.includes('/cafes/')) {
-        return '../../';
-    } else if (depth > 1) {
-        return '../';
-    } else {
-        return '';
-    }
-}
-
-// Load navigation into the page
-function loadNavigation(currentPage = '') {
-    document.addEventListener('DOMContentLoaded', function() {
-        const navigationHTML = createNavigation(currentPage);
-        
-        // Find existing header or create one
-        let header = document.querySelector('header');
-        if (header) {
-            header.outerHTML = navigationHTML;
-        } else {
-            // Insert at the beginning of body
-            document.body.insertAdjacentHTML('afterbegin', navigationHTML);
-        }
-    });
-}
-
-// Usage examples:
-// For main page: loadNavigation();
-// For search page: loadNavigation('search');
-// For favorites page: loadNavigation('favorites');
-// For reservations page: loadNavigation('reservations');
-// For login page: loadNavigation('login');
-// For cafe pages: loadNavigation();
-  </script>
+  // Usage examples:
+  // For main page: loadNavigation();
+  // For search page: loadNavigation('search');
+  // For favorites page: loadNavigation('favorites');
+  // For reservations page: loadNavigation('reservations');
+  // For login page: loadNavigation('login');
+  // For cafe pages: loadNavigation();
+</script>
 
 </body>
 </html>

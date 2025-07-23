@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cafe Spot Finder</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    /* add style user */
+    .user-greeting {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #3b2f2f;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1><a href="../index.html">Cafe Spot Finder</a></h1>
+    <nav>
+      <a href="../search/index.html">Search</a>
+      <a href="../my-favorites/index.html">My Favorites</a>
+      <a href="#" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
+
+  <!-- 👋 Greeting from localStorage -->
+  <div class="user-greeting" id="userGreeting">Loading user...</div>
+
+  <!-- Hero Section -->
+  <section class="hero" style="background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url('../assets/landing-bg.jpg'); background-size: cover; background-position: center;">
+    <h2>Find Your Perfect Cafe</h2>
+    <p>Discover cozy cafes in Toronto with real-time availability, perfect for work, study, or relaxation.</p>
+    <div class="cta-buttons">
+      <button onclick="window.location.href='../search/index.html'">Start Searching</button>
+      <button onclick="window.location.href='../register-owner/index.html'">Register Your Cafe</button>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="feature-item">
+      <h3>Real-Time Availability</h3>
+      <p>Check seat availability, power outlets, and noise levels in real-time.</p>
+    </div>
+    <div class="feature-item">
+      <h3>Save Favorites</h3>
+      <p>Keep track of your favorite cafes and never lose that perfect spot.</p>
+    </div>
+    <div class="feature-item">
+      <h3>Easy Reservations</h3>
+      <p>Reserve your table in advance and guarantee your perfect workspace.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 Cafe Spot Finder. All rights reserved.</p>
+    <div>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </footer>
+
+  <script>
+    // Use email from localStorage for show
+    const email = localStorage.getItem("currentUser");
+    const greeting = document.getElementById("userGreeting");
+
+    if (email) {
+      greeting.textContent = `Welcome, ${email}! ☕ Ready to find your next favorite spot?`;
+    } else {
+      greeting.textContent = "Welcome! (User not found)";
+    }
+
+
+    // Logout not del info in localStorage
+    const logoutBtn = document.getElementById("logoutBtn");
+    logoutBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      // Clear currentUser for logout
+      localStorage.removeItem("currentUser");
+      localStorage.removeItem("loggedIn");
+
+      // redirect go to login
+      window.location.href = "../login/index.html";
+    });
+
+  </script>
+</body>
+</html>

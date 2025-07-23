@@ -12,7 +12,7 @@
         <nav>
             <a href="../../search/index.html">Search</a>
             <a href="../../my-favorites/index.html">My Favorites</a>
-            <a href="../../login/index.html">Login</a>
+            <a href="../login/index.html" id="loginLogoutBtn">Login</a>
         </nav>
     </header>
 
@@ -96,11 +96,14 @@
         let isFavoriteAdded = false;
         let images = [];
         let currentImageIndex = 0;
+        
 
         // Get cafe ID from URL parameters
         function getCafeIdFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('id') || 'Le Génie'; // Default to bloom if no ID provided
+            const id = urlParams.get('id');
+            return id && cafesData[id] ? id : 'Le Génie';
+            //return urlParams.get('id') || 'Le Génie'; // Default to bloom if no ID provided
         }
 
         // Cafe data (embedded to avoid CORS issues)
@@ -181,6 +184,7 @@
                 if (cafesData[cafeId]) {
                     currentCafe = cafesData[cafeId];
                     populateCafeData(currentCafe);
+                    checkIfFavorite();
                 } else {
                     showError('Cafe not found');
                 }
@@ -224,38 +228,69 @@
             }
         }
 
+        function checkIfFavorite() {
+            const btn = document.querySelector('.favorite-btn');
+            if (!btn || !currentCafe) return;
+
+            const email = localStorage.getItem("currentUser");
+            const loggedIn = localStorage.getItem("loggedIn");
+            if (loggedIn !== "true" || !email) {
+                btn.innerHTML = `<span class="heart" style="color: #a87544;">♡</span> Add to Favorites`;
+                return;
+            }
+            const favoritesKey = `favorites_${email}`;
+            const favorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+
+            const isFav = favorites.includes(currentCafe.id);
+            isFavoriteAdded = isFav;
+
+            btn.innerHTML = isFav
+                ? `<span class="heart" style="color: #a87544;">♥</span> Added to Favorites`
+                : `<span class="heart" style="color: #a87544;">♡</span> Add to Favorites`;
+        }
+
+
         function showError(message) {
             document.getElementById('cafe-name').textContent = 'Error';
             document.getElementById('cafe-address').innerHTML = `<strong>Error:</strong> ${message}`;
         }
-
+        
         function toggleFavorite() {
+            const btn = document.querySelector('.favorite-btn');
             if (!currentCafe) return;
 
-            const isLoggedIn = false; // 🔁 Replace with real login check if needed
-
-            if (!isLoggedIn) {
-                alert('Please log in to continue.');
+            const loggedIn = localStorage.getItem("loggedIn");
+            const email = localStorage.getItem("currentUser");
+            if (loggedIn !== "true" || !email) {
+                alert("Please log in to continue.");
                 window.location.href = '../../login/index.html';
                 return;
             }
-            
-            const btn = document.querySelector('.favorite-btn');
-            const heart = btn.querySelector('.heart');
 
-            if (!isFavoriteAdded) {
-                heart.textContent = '♥';
+            const favoritesKey = `favorites_${email}`;
+            let favorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+
+            const index = favorites.indexOf(currentCafe.id);
+
+            if (index === -1) {
+                // Add
+                if (!favorites.includes(currentCafe.id)) {
+                    favorites.push(currentCafe.id);
+                }
+                isFavoriteAdded = true;
                 btn.innerHTML = `<span class="heart" style="color: #a87544;">♥</span> Added to Favorites`;
                 alert(`${currentCafe.name} added to your favorites!`);
-            }
-            else {
-                heart.textContent = '♡';
+            } else {
+                // Remove
+                favorites.splice(index, 1);
+                isFavoriteAdded = false;
                 btn.innerHTML = `<span class="heart" style="color: #a87544;">♡</span> Add to Favorites`;
                 alert(`${currentCafe.name} removed from favorites.`);
             }
-            isFavoriteAdded = !isFavoriteAdded; // A variable record the current status: removing favorite or adding favorite
+
+            localStorage.setItem(favoritesKey, JSON.stringify(favorites));
         }
-                
+
         function changeImage(direction) {
             if (images.length === 0) return;
             
@@ -291,6 +326,30 @@
 
         // Load cafe data when page loads
         document.addEventListener('DOMContentLoaded', loadCafeData);
+
+        // Check status button login for switch button Login/Logout
+        window.addEventListener("DOMContentLoaded", () => {
+            const loginLogoutBtn = document.getElementById("loginLogoutBtn");
+            const userEmail = localStorage.getItem("currentUser");
+
+            if (userEmail) {
+                // Switch button to Logout
+                loginLogoutBtn.textContent = "Logout";
+                loginLogoutBtn.href = "#"; 
+
+                loginLogoutBtn.addEventListener("click", (e) => {
+                    e.preventDefault(); 
+                
+                    // Clear currentUser for logout
+                    localStorage.removeItem("currentUser");
+                    localStorage.removeItem("loggedIn");
+                    
+                    // redirect go to login
+                    window.location.href = "../../login/index.html";
+                    
+                });
+            }
+        });
     </script>
 
     <style>
